@@ -114,8 +114,23 @@ var Board = function(game){
       return false;
     };
 
+    // move again if same piece
+    if(this.again && this.again != this.currentPiece.id){
+      return false;
+    }
+
+    // move again if capture
+    if(this.again && this.piecesBetween.length != 1){
+      return false
+    }
+
     // piece moves
     if (this.currentPiece.king == "false") {
+
+      // back moves if not move again
+      if(startRow > endRow && !this.again){
+        return false;
+      }
 
       // back moves if not capture
       if(startRow > endRow && this.piecesBetween.length != 1) {
@@ -212,7 +227,77 @@ var Board = function(game){
 
   };
 
-  // capture the piece
+  this.nextMoves = function(){
+
+    // set pieces around
+    this.piecesAround = [];
+
+    if (this.rowsBetween.length > 0 &&
+        this.piecesBetween.length == 1) {
+
+      var rowsAround = [this.endRow - 1, this.endRow + 1];
+      var colsAround = [this.endCol - 1, this.endCol + 1];
+
+      for (var i = rowsAround.length - 1; i >= 0; i--) {
+        for (var j = colsAround.length - 1; j >= 0; j--) {
+          
+          var cellAround = document.querySelector('div[row="' + rowsAround[i] + '"][col="' + colsAround[j] + '"]');
+
+          if (cellAround && cellAround.firstChild){
+
+            // set piece around
+            var pieceAround = cellAround.firstChild;
+            var piecesAroundColor = pieceAround.getAttribute('color');
+
+            // only if opposite color
+            if(piecesAroundColor != this.pieceColor &&
+               this.piecesBetween.indexOf(pieceAround) < 0){
+                // append piece around
+                this.piecesAround.push(pieceAround);
+            };
+
+          };
+
+        };
+      };
+    };
+
+    // set empty containers for next moves
+    this.containersAround = [];
+
+    if (this.piecesAround.length > 0) {
+
+      for (var i = this.piecesAround.length - 1; i >= 0; i--) {
+
+        var pieceAroundRow = parseInt(this.piecesAround[i].parentNode.getAttribute('row'));
+        var pieceAroundCol = parseInt(this.piecesAround[i].parentNode.getAttribute('col'));
+
+        var rowsAround = [pieceAroundRow-1,pieceAroundRow+1];
+        var colsAround = [pieceAroundCol-1,pieceAroundCol+1];
+        
+        for (var j = rowsAround.length - 1; j >= 0; j--) {
+          for (var k = colsAround.length - 1; k >= 0; k--) {
+            
+            var containerAround = document.querySelector('div[row="' + rowsAround[j] + '"][col="' + colsAround[k] + '"]');
+            if (containerAround &&
+                containerAround.getAttribute('empty') == 'true' &&
+                rowsAround[j] != this.endRow &&
+                colsAround[k] != this.endCol) {
+                  // append container around
+                  this.containersAround.push(containerAround);
+            };
+    
+          };
+    
+        };
+    
+      };
+    
+    };
+
+  };
+
+    // capture the piece
   this.capturePiece = function(){
     if (this.piecesBetween.length == 1) {
       this.removePiece(this.piecesBetween[0]);
@@ -244,7 +329,17 @@ var Board = function(game){
 
     };
 
-    this.turn = (this.turn == game.black) ? this.game.white : this.game.black;
+    // get next moves
+    this.nextMoves();
+    
+    if (this.containersAround.length == 0) {
+      // change turn
+      this.again = false
+      this.turn = (this.turn == game.black) ? this.game.white : this.game.black;
+    } else {
+      // move again
+      this.again = this.pieceMoved.getAttribute('id');
+    }
     
     // set bottom and top king row
     this.kingRow = (this.currentPiece.color == 'white') ? 0 : 7;
