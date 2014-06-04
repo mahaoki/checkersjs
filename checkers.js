@@ -4,6 +4,7 @@ var Checkers = function(){
   this.newCheckers = function(){
     this.white = new Player('white');
     this.black = new Player('black');
+    this.turn = this.white;
     this.board = new Board(this);
   };
 };
@@ -12,6 +13,7 @@ var Board = function(game){
 
   // setting atual game
   this.game = game;
+  this.turn = game.turn;
 
   // render board on start
   renderBoard.apply(this);
@@ -75,8 +77,27 @@ var Board = function(game){
       'empty': e.target.getAttribute('empty')
     }
 
-    this.movePiece(e);
-    
+    // check move rules
+    if(this.checkMove(e)){
+      // move the piece
+      this.movePiece(e);
+    }
+  }
+
+  this.checkMove = function(e){
+
+    // check turn
+    if(this.turn.color != this.currentPiece.color){
+      return false;
+    }
+
+    // empty container
+    if (this.endContainer.empty != 'true') {
+      return false;
+    };
+
+    return true;
+
   }
 
   // move the piece
@@ -85,12 +106,17 @@ var Board = function(game){
     var data = e.dataTransfer.getData("text/plain");
 
     if(e.target.id != data){
-
+      
       this.pieceMoved = document.getElementById(data);
       e.target.appendChild(this.pieceMoved);
       e.target.setAttribute('empty', false);
 
+      // empty parent container
+      this.currentPiece.parent.setAttribute('empty', true);
+
     };
+
+    this.turn = (this.turn == game.black) ? this.game.white : this.game.black;
     
   }
 
