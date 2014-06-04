@@ -331,7 +331,7 @@ var Board = function(game){
 
     // get next moves
     this.nextMoves();
-    
+
     if (this.containersAround.length == 0) {
       // change turn
       this.again = false
@@ -360,6 +360,10 @@ var Board = function(game){
 
     // get body element
     var body = document.getElementsByTagName('body')[0];
+
+    // create title
+    var title = document.createElement('h1');
+    title.innerHTML = 'checkers.js';
     
     // create table element for board
     var board = document.createElement('table');
@@ -413,6 +417,7 @@ var Board = function(game){
     };
 
     body.insertBefore(board, body.firstChild);
+    body.insertBefore(title, body.firstChild);
 
   };
 
