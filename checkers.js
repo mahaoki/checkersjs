@@ -86,6 +86,19 @@ var Board = function(game){
 
   this.checkMove = function(e){
 
+    // get move map
+    this.moveMap();
+
+    // set rows coords
+    var startRow =  this.startRow;
+    var endRow =  this.endRow;
+
+    // invert white rows
+    if(this.turn == game.white){
+      startRow =  7 - this.startRow;
+      endRow =  7 - this.endRow;
+    }
+
     // check turn
     if(this.turn.color != this.currentPiece.color){
       return false;
@@ -96,9 +109,88 @@ var Board = function(game){
       return false;
     };
 
+    // diagonal moves
+    if(this.rowsBetween.length != this.colsBetween.length){
+      return false;
+    };
+
+    // back moves if not capture
+    if(startRow > endRow && this.piecesBetween.length != 1) {
+      return false
+    };
+
+    // only one container if not capture
+    if(this.rowsBetween.length != 0 && this.piecesBetween.length != 1){
+      return false;
+    }
+
+    // if capture only move two rows
+    if(this.piecesBetween.length == 1 && this.rowsBetween.length != 1){
+      return false;
+    };
+
     return true;
 
   }
+
+  this.moveMap = function(){
+
+    // rows and columns coords
+    this.rowsBetween = [];
+    this.colsBetween = [];
+
+    if (this.startRow > this.endRow) { // bottom to top
+      for (var i = this.startRow - 1; i > this.endRow; i-- ) {
+        this.rowsBetween.push(i);
+      };
+    } else if (this.startRow < this.endRow) { // top to top
+      for (var i = this.startRow + 1; i < this.endRow; i++ ) {
+        this.rowsBetween.push(i);
+      };
+    };
+
+    if (this.startCol < this.endCol) { // left to right
+      for (var j = this.startCol + 1; j < this.endCol; j++) {
+        this.colsBetween.push(j);
+      };
+    } else if(this.startCol > this.endCol){ // right to left
+      for (var j = this.startCol - 1; j > this.endCol; j--) {
+        this.colsBetween.push(j);
+      };
+    };
+
+    // set pieces between
+    this.piecesBetween = [];
+    this.blockPiecesBetween = [];
+
+    if (this.rowsBetween.length > 0) {
+
+
+      for (var i = this.rowsBetween.length - 1; i >= 0; i--) {
+        
+        // set container bettwen
+        var containerBetween = document.querySelector('div[row="' + this.rowsBetween[i] + '"][col="' + this.colsBetween[i] + '"]');
+        
+        if (containerBetween && containerBetween.firstChild) {
+          
+          // set piece between
+          var pieceBetween = containerBetween.firstChild;
+          var pieceBetweenColor = pieceBetween.getAttribute('color');
+          
+          // only if opposite color
+          if (pieceBetweenColor != this.currentPiece.color){
+            this.piecesBetween.push(pieceBetween)
+          } else if (pieceBetweenColor == this.currentPiece.color) {
+            this.blockPiecesBetween.push(pieceBetween);
+          };
+
+        };        
+
+      };
+
+    };
+
+  };
 
   // move the piece
   this.movePiece = function(e){
@@ -106,7 +198,7 @@ var Board = function(game){
     var data = e.dataTransfer.getData("text/plain");
 
     if(e.target.id != data){
-      
+
       this.pieceMoved = document.getElementById(data);
       e.target.appendChild(this.pieceMoved);
       e.target.setAttribute('empty', false);
