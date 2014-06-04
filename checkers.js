@@ -114,20 +114,40 @@ var Board = function(game){
       return false;
     };
 
-    // back moves if not capture
-    if(startRow > endRow && this.piecesBetween.length != 1) {
-      return false
+    // piece moves
+    if (this.currentPiece.king == "false") {
+
+      // back moves if not capture
+      if(startRow > endRow && this.piecesBetween.length != 1) {
+        return false
+      };
+
+      // only one container if not capture
+      if(this.rowsBetween.length != 0 && this.piecesBetween.length != 1){
+        return false;
+      }
+
+      // if capture only move two rows
+      if(this.piecesBetween.length == 1 && this.rowsBetween.length != 1){
+        return false;
+      };
+
     };
 
-    // only one container if not capture
-    if(this.rowsBetween.length != 0 && this.piecesBetween.length != 1){
-      return false;
-    }
+    // king moves
+    if(this.currentPiece.king == "true"){
 
-    // if capture only move two rows
-    if(this.piecesBetween.length == 1 && this.rowsBetween.length != 1){
-      return false;
-    };
+      // over more than one piece
+      if (this.piecesBetween.length > 1){
+        return false;
+      };
+
+      // over same pieces
+      if (this.blockPiecesBetween.length != 0){
+        return false;
+      };
+
+    } 
 
     return true;
 
