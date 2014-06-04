@@ -16,6 +16,84 @@ var Board = function(game){
   // render board on start
   renderBoard.apply(this);
 
+  // event handler
+  this.handleEvent = function(event){
+    var el = event.target;
+    
+    switch (event.type) {
+      case 'dragstart':
+        this.dragPiece(event);
+        break
+      case 'dragover':
+        event.preventDefault();
+        break
+      case 'drop':
+        event.preventDefault();
+        this.dropPiece(event);
+        break  
+    }
+  }
+
+  // drag piece
+  this.dragPiece = function(e){
+    this.setDragPiece(e);
+  }
+
+  // drop piece
+  this.dropPiece = function(e){
+    this.setDropPiece(e);
+  }
+
+  this.setDragPiece = function(e){
+
+    // set data transfer
+    e.dataTransfer.setData("text/plain", e.target.id);
+
+    // set start coords
+    this.startRow = parseInt(e.target.parentNode.getAttribute('row'));
+    this.startCol = parseInt(e.target.parentNode.getAttribute('col'));
+    
+    // get current piece attributes
+    this.currentPiece = {
+      'parent': e.target.parentNode,
+      'id': e.target.getAttribute('id'),
+      'color': e.target.getAttribute('color'),
+      'king': e.target.getAttribute('king')
+    };
+    
+  }
+
+  this.setDropPiece = function(e){
+    
+    // set end coords
+    this.endRow = parseInt(e.target.getAttribute('row'));
+    this.endCol = parseInt(e.target.getAttribute('col'));
+
+    // get end container attributes
+    this.endContainer = {
+      'element': e.target,
+      'empty': e.target.getAttribute('empty')
+    }
+
+    this.movePiece(e);
+    
+  }
+
+  // move the piece
+  this.movePiece = function(e){
+
+    var data = e.dataTransfer.getData("text/plain");
+
+    if(e.target.id != data){
+
+      this.pieceMoved = document.getElementById(data);
+      e.target.appendChild(this.pieceMoved);
+      e.target.setAttribute('empty', false);
+
+    };
+    
+  }
+
   function renderBoard(){
 
     // get body element
