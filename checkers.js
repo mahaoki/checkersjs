@@ -18,7 +18,7 @@ var Board = function(game){
 
     // get body element
     var body = document.getElementsByTagName('body')[0];
-
+    
     // create table element for board
     var board = document.createElement('table');
 
@@ -43,6 +43,18 @@ var Board = function(game){
           container.setAttribute('empty', true);
           container.addEventListener('dragover', this, false);
           container.addEventListener('drop', this, false);
+
+          // new piece
+          piece = new Piece();
+          var pieceId = 'piece-r'+i+'c'+j;
+
+          if (i < 3) {
+            // render black pieces
+            piece.render(pieceId, container, this);
+          } else if (i > 4){
+            // render black pieces
+            piece.render(pieceId, container,this);
+          };
           
           boardCol.appendChild(container);
           
@@ -56,6 +68,29 @@ var Board = function(game){
     };
 
     body.insertBefore(board, body.firstChild);
+
+  };
+
+};
+
+var Piece = function(){
+
+  // rende the piece
+  this.render = function(id, parent, color, handler){
+    
+    // create piece element
+    var piece = document.createElement('div');
+    piece.className = 'piece ' + color;
+    piece.setAttribute('id', id);
+    piece.setAttribute('color', color);
+    piece.setAttribute('king', false);
+    piece.setAttribute('draggable', true);
+    
+    piece.addEventListener('dragstart', handler, false);
+    piece.addEventListener('dragend', handler, false);
+    
+    parent.appendChild(piece);
+    parent.setAttribute('empty', false);
 
   };
 

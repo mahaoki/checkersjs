@@ -15,3 +15,10 @@ td{
   background-color: #AAA;
   vertical-align: middle;
 }
+
+.piece{
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #FFF
+}
