@@ -20,6 +20,9 @@ td{
   width: 40px;
   height: 40px;
   border-radius: 20px;
+  text-align: center;
+  line-height: 37px;
+  font-size: 20px;
 }
 
 .piece.white{
@@ -33,3 +36,14 @@ td{
   box-shadow: 2px 2px 0 #222;
   color: #CCC;
 }
+
+.piece[king='true']{
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);  
+}
+
+.piece.white[king='true']{box-shadow: 2px -2px 0 #666;}
+.piece.black[king='true']{box-shadow: 2px -2px 0 #222;}

@@ -205,7 +205,6 @@ var Board = function(game){
     e.remove();
   }
 
-
   // move the piece
   this.movePiece = function(e){
 
@@ -227,7 +226,20 @@ var Board = function(game){
 
     this.turn = (this.turn == game.black) ? this.game.white : this.game.black;
     
-  }
+    // set bottom and top king row
+    this.kingRow = (this.currentPiece.color == 'white') ? 0 : 7;
+
+    // turn king
+    if (this.endRow == this.kingRow){
+      this.turnKing(this.pieceMoved);
+    };
+    
+  };
+
+  this.turnKing = function(e){
+    e.setAttribute('king', true);
+    e.innerHTML = '=]';
+  };
 
   function renderBoard(){
 
