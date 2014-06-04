@@ -20,5 +20,16 @@ td{
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #FFF
+}
+
+.piece.white{
+  background-color: #FFF;
+  box-shadow: 2px 2px 0 #666;
+  color: #222;
+}
+
+.piece.black{
+  background-color: #333;
+  box-shadow: 2px 2px 0 #222;
+  color: #CCC;
 }

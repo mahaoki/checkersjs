@@ -2,6 +2,8 @@ var Checkers = function(){
 
   // new checkers game
   this.newCheckers = function(){
+    this.white = new Player('white');
+    this.black = new Player('black');
     this.board = new Board(this);
   };
 };
@@ -47,13 +49,16 @@ var Board = function(game){
           // new piece
           piece = new Piece();
           var pieceId = 'piece-r'+i+'c'+j;
+          var player;
 
           if (i < 3) {
             // render black pieces
-            piece.render(pieceId, container, this);
+            player = this.game.black;
+            piece.render(pieceId, container, player.color, this);
           } else if (i > 4){
             // render black pieces
-            piece.render(pieceId, container,this);
+            player = this.game.white
+            piece.render(pieceId, container, player.color, this);
           };
           
           boardCol.appendChild(container);
@@ -72,6 +77,12 @@ var Board = function(game){
   };
 
 };
+
+var Player = function(color){
+  // set player color
+  this.color = color;
+};
+
 
 var Piece = function(){
 
