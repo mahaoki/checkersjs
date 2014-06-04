@@ -192,6 +192,20 @@ var Board = function(game){
 
   };
 
+  // capture the piece
+  this.capturePiece = function(){
+    if (this.piecesBetween.length == 1) {
+      this.removePiece(this.piecesBetween[0]);
+    };
+  }
+
+  // remove the piece
+  this.removePiece = function(e){
+    e.parentNode.setAttribute('empty', true);
+    e.remove();
+  }
+
+
   // move the piece
   this.movePiece = function(e){
 
@@ -205,6 +219,9 @@ var Board = function(game){
 
       // empty parent container
       this.currentPiece.parent.setAttribute('empty', true);
+
+      // capture piece
+      this.capturePiece();
 
     };
 
