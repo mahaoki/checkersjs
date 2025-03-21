@@ -3,8 +3,6 @@ CheckersJs
 
 Checkers game using pure javascript
 
-public version: [checkersjs.com](http://checkersjs.com/ "View public version")
-
 Rules to implement
 ------------------
 
